@@ -12,14 +12,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import {fetchLikedFormSubmissions} from './service/mockServer';
 import Typography from '@mui/material/Typography';
 
-// TODO: replace the following placeholder function with one that populates the list from local storage
-function generate(element) {
-  return [0, 1, 2].map((value) =>
-    React.cloneElement(element, {
-      key: value,
-    }),
-  );
-}
 export default function LikedSubmissionList() {
 
     const [likedFormSubmissions, setLikedFormSubmissions] = useState(false);
