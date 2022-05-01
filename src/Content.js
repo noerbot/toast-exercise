@@ -67,10 +67,23 @@ export default function Content() {
     }
   );
 
+  const removeSubmission = (submissionId) => {
+    console.log('removeSubmission', submissionId);
+    // Remove the submission from local storage
+    const submissions = JSON.parse(localStorage.getItem('formSubmissions')) || [];
+    const updatedSubmissions = [...submissions.filter(submission => submission.id !== submissionId)];
+    localStorage.setItem('formSubmissions', JSON.stringify(updatedSubmissions),);
+    // Remove the submission from the list on the page
+    queryClient.setQueryData('submissions', old => ({
+      ...old,
+      formSubmissions: [...old.formSubmissions.filter(submission => submission.id !== submissionId)],
+    }));
+  };
+
   return (
     <Box sx={{marginTop: 3}}>
       <Typography variant="h4">Liked Form Submissions</Typography>
-      <LikedSubmissionList likedFormSubmissions={data?.formSubmissions} isLoading={isLoading} fetchFailed={isError} />
+      <LikedSubmissionList likedFormSubmissions={data?.formSubmissions} isLoading={isLoading} fetchFailed={isError} removeSubmission={removeSubmission} />
       <Toast handleLike={handleLike} handleClose={handleClose} open={open} newSubmission={newSubmission} />
     </Box>
   );

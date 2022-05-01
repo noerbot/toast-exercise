@@ -13,7 +13,7 @@ import Typography from '@mui/material/Typography';
 
 export default function LikedSubmissionList(props) {
 
-    const {likedFormSubmissions, isLoading, fetchFailed} = props;
+    const {likedFormSubmissions, isLoading, fetchFailed, removeSubmission} = props;
 
     if(isLoading && !fetchFailed) {
         return <Typography ml={1}>Loading...</Typography>;
@@ -31,7 +31,7 @@ export default function LikedSubmissionList(props) {
                     {likedFormSubmissions.length > 0 && likedFormSubmissions.map((formSubmission) => (
                             <ListItem
                                 secondaryAction={
-                                    <IconButton edge="end" aria-label="delete">
+                                    <IconButton edge="end" aria-label="delete" onClick={() => removeSubmission(formSubmission.id)}>
                                         {// TODO: wire up the delete button 
                                         }
                                         <DeleteIcon />
