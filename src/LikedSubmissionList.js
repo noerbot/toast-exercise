@@ -17,7 +17,7 @@ const maxFetchAttempts = 3;
 
 export default function LikedSubmissionList() {
 
-    const [likedFormSubmissions, setLikedFormSubmissions] = useState(false);
+    const [likedFormSubmissions, setLikedFormSubmissions] = useState([]);
     const [fetchAttempts, setFetchAttempts] = useState(1);
     const [fetchFailed, setFetchFailed] = useState(false);
     useEffect(() => {
@@ -34,7 +34,7 @@ export default function LikedSubmissionList() {
         setLikedFormSubmissions([...likedFormSubmissions, submission]);
     }
 
-    if(!likedFormSubmissions && !fetchFailed) {
+    if(likedFormSubmissions.length === 0 && !fetchFailed) {
         return <Typography ml={1}>Loading... attempt #{fetchAttempts} of {maxFetchAttempts}</Typography>;
     } else if (fetchFailed) {
         return <Typography ml={1}>Oops, our flaky server failed to load submissions after {maxFetchAttempts} attempts. Please try again later!</Typography>;
@@ -52,7 +52,7 @@ export default function LikedSubmissionList() {
             <Grid container spacing={2}>
                 <Grid item xs={12} md={6}>
                     <List>
-                    {likedFormSubmissions.map((formSubmission) => (
+                    {likedFormSubmissions.length > 0 && likedFormSubmissions.map((formSubmission) => (
                             <ListItem
                                 secondaryAction={
                                     <IconButton edge="end" aria-label="delete">
