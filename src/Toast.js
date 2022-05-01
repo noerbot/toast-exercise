@@ -10,11 +10,11 @@ function SlideTransition(props) {
 }
 
 export default function Toast(props) {
-  const {handleLike, handleClose, open, newSubmission} = props;
+  const {handleLike, handleClose, open, message} = props;
 
   const action = (
     <React.Fragment>
-      <Button color="secondary" size="small" onClick={handleLike}>
+      <Button color="primary" size="large" onClick={handleLike}>
         LIKE
       </Button>
       <IconButton
@@ -32,7 +32,7 @@ export default function Toast(props) {
     <div>
       <Snackbar
         open={open}
-        message={newSubmission.data?.firstName + ' ' + newSubmission.data?.lastName + '\n' + newSubmission.data?.email}
+        message={message}
         style={{ whiteSpace: 'pre-wrap' }} 
         action={action}
         anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}

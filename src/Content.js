@@ -22,6 +22,13 @@ export default function Content() {
     });
   }, []);
 
+  const [message, setMessage] = useState('');
+  useEffect(() => {
+    if (newSubmission.id) {
+      setMessage(newSubmission.data?.firstName + ' ' + newSubmission.data?.lastName + '\n' + newSubmission.data?.email);
+    }
+  }, [message, newSubmission]);
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -78,7 +85,7 @@ export default function Content() {
     <Box sx={{marginTop: 3}}>
       <Typography variant="h4">Liked Form Submissions</Typography>
       <LikedSubmissionList likedFormSubmissions={data?.formSubmissions} isLoading={isLoading} fetchFailed={isError} removeSubmission={removeSubmission} />
-      <Toast handleLike={handleLike} handleClose={handleClose} open={open} newSubmission={newSubmission} />
+      <Toast handleLike={handleLike} handleClose={handleClose} open={open} message={message}/>
     </Box>
   );
 }
