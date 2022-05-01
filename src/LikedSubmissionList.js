@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -9,42 +9,18 @@ import IconButton from '@mui/material/IconButton';
 import Grid from '@mui/material/Grid';
 import FolderIcon from '@mui/icons-material/Folder';
 import DeleteIcon from '@mui/icons-material/Delete';
-import {fetchLikedFormSubmissions} from './service/mockServer';
 import Typography from '@mui/material/Typography';
-import Toast from './Toast';
 
-const maxFetchAttempts = 3;
+export default function LikedSubmissionList(props) {
 
-export default function LikedSubmissionList() {
+    const {likedFormSubmissions, isLoading, fetchFailed} = props;
 
-    const [likedFormSubmissions, setLikedFormSubmissions] = useState([]);
-    const [fetchAttempts, setFetchAttempts] = useState(1);
-    const [fetchFailed, setFetchFailed] = useState(false);
-    useEffect(() => {
-        fetchLikedFormSubmissions().then(response => {
-            console.log('response: ', response);
-            setLikedFormSubmissions(response.formSubmissions);
-        }).catch(error => {
-            console.log('error: ', error);
-            fetchAttempts < maxFetchAttempts ? setFetchAttempts(fetchAttempts + 1) : setFetchFailed(true);
-        });
-    }, [fetchAttempts]);
-
-    const addSubmissiontoList = (submission) => {
-        setLikedFormSubmissions([...likedFormSubmissions, submission]);
-    }
-
-    if(likedFormSubmissions.length === 0 && !fetchFailed) {
-        return <Typography ml={1}>Loading... attempt #{fetchAttempts} of {maxFetchAttempts}</Typography>;
-    } else if (fetchFailed) {
-        return <Typography ml={1}>Oops, our flaky server failed to load submissions after {maxFetchAttempts} attempts. Please try again later!</Typography>;
-    } else if (likedFormSubmissions.length === 0) {
-        return (
-            <>
-                <Typography ml={1}>Submissions you like will appear here.</Typography>
-                <Toast addSubmissiontoList={addSubmissiontoList} />
-            </>
-        );
+    if(isLoading && !fetchFailed) {
+        return <Typography ml={1}>Loading...</Typography>;
+    } else if (fetchFailed && !isLoading) {
+        return <Typography ml={1}>Oops, our flaky server failed to load submissions. Please try again later!</Typography>;
+    } else if (likedFormSubmissions.length === 0 && !fetchFailed && !isLoading) {
+        return <Typography ml={1}>Submissions you like will appear here.</Typography>;
     }
 
     return (
@@ -77,7 +53,6 @@ export default function LikedSubmissionList() {
                     </List>
                 </Grid>
             </Grid>
-            <Toast addSubmissiontoList={addSubmissiontoList} />
         </Box>
     );
 }
