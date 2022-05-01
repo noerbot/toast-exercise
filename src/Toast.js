@@ -23,10 +23,6 @@ export default function Toast() {
     });
   }, []);
 
-  const openSnack = () => {
-    setOpen(true);
-  };
-
   const handleClose = () => {
     setOpen(false);
   };
@@ -34,6 +30,7 @@ export default function Toast() {
   const handleLike = (event) => {
     console.log('liked', event);
     saveLikedFormSubmission(newSubmission);
+    // TODO: add retry logic for when saving a form submission fails
     setNewSubmission({}); // clear the new submission state
     setOpen(false);
   }
@@ -56,7 +53,6 @@ export default function Toast() {
 
   return (
     <div>
-      <Button onClick={openSnack}>Open simple snackbar</Button>
       <Snackbar
         open={open}
         onClose={handleClose}
