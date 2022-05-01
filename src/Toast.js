@@ -4,7 +4,7 @@ import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
-import { onMessage } from './service/mockServer';
+import { onMessage, saveLikedFormSubmission } from './service/mockServer';
 
 function SlideTransition(props) {
     return <Slide {...props} direction="up" />;
@@ -33,7 +33,8 @@ export default function Toast() {
 
   const handleLike = (event) => {
     console.log('liked', event);
-    // TODO: save form submission to list of liked submissions
+    saveLikedFormSubmission(newSubmission);
+    setNewSubmission({}); // clear the new submission state
     setOpen(false);
   }
 
