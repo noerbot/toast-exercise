@@ -10,7 +10,8 @@ function SlideTransition(props) {
     return <Slide {...props} direction="up" />;
 }
 
-export default function Toast() {
+export default function Toast(props) {
+  const {addSubmissiontoList} = props;
   const [open, setOpen] = React.useState(false);
 
   const [newSubmission, setNewSubmission] = useState({});
@@ -29,6 +30,7 @@ export default function Toast() {
 
   const handleLike = () => {
     saveLikedFormSubmission(newSubmission);
+    addSubmissiontoList(newSubmission);
     // TODO: add retry logic for when saving a form submission fails
     setOpen(false);
   }

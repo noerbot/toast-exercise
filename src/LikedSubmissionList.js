@@ -30,6 +30,10 @@ export default function LikedSubmissionList() {
         });
     }, [fetchAttempts]);
 
+    const addSubmissiontoList = (submission) => {
+        setLikedFormSubmissions([...likedFormSubmissions, submission]);
+    }
+
     if(!likedFormSubmissions && !fetchFailed) {
         return <Typography ml={1}>Loading... attempt #{fetchAttempts} of {maxFetchAttempts}</Typography>;
     } else if (fetchFailed) {
@@ -38,7 +42,7 @@ export default function LikedSubmissionList() {
         return (
             <>
                 <Typography ml={1}>Submissions you like will appear here.</Typography>
-                <Toast />
+                <Toast addSubmissiontoList={addSubmissiontoList} />
             </>
         );
     }
@@ -73,7 +77,7 @@ export default function LikedSubmissionList() {
                     </List>
                 </Grid>
             </Grid>
-            <Toast />
+            <Toast addSubmissiontoList={addSubmissiontoList} />
         </Box>
     );
 }
