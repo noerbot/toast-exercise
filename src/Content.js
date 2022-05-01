@@ -17,7 +17,6 @@ export default function Content() {
   const [newSubmission, setNewSubmission] = useState({});
   useEffect(() => {
     onMessage((formSubmission) => {
-        console.log('message received: ', formSubmission);
         setNewSubmission(formSubmission);
         setOpen(true);
         // TODO: better handling when "Add Submission" is clicked in rapid succession
@@ -30,7 +29,6 @@ export default function Content() {
 
   const handleLike = () => {
     addSubmissionMutation.mutate(newSubmission);
-    // TODO: add retry logic for when saving a form submission fails
   }
 
   const addSubmissionMutation = useMutation(
@@ -68,7 +66,6 @@ export default function Content() {
   );
 
   const removeSubmission = (submissionId) => {
-    console.log('removeSubmission', submissionId);
     // Remove the submission from local storage
     const submissions = JSON.parse(localStorage.getItem('formSubmissions')) || [];
     const updatedSubmissions = [...submissions.filter(submission => submission.id !== submissionId)];

@@ -32,8 +32,6 @@ export default function LikedSubmissionList(props) {
                             <ListItem
                                 secondaryAction={
                                     <IconButton edge="end" aria-label="delete" onClick={() => removeSubmission(formSubmission.id)}>
-                                        {// TODO: wire up the delete button 
-                                        }
                                         <DeleteIcon />
                                     </IconButton>
                                 }
