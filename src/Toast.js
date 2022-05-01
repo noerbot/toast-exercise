@@ -27,8 +27,7 @@ export default function Toast() {
     setOpen(false);
   };
 
-  const handleLike = (event) => {
-    console.log('liked', event);
+  const handleLike = () => {
     saveLikedFormSubmission(newSubmission);
     // TODO: add retry logic for when saving a form submission fails
     setNewSubmission({}); // clear the new submission state
