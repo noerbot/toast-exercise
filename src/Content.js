@@ -37,6 +37,7 @@ export default function Content() {
       // the old value and return it so that it's accessible in case of
       // an error
       onMutate: async newSubmission => {
+        setOpen(false);
         await queryClient.cancelQueries('submissions');
 
         const previousValue = queryClient.getQueryData('submissions');
@@ -48,12 +49,9 @@ export default function Content() {
 
         return previousValue;
       },
-      // On success, close the toast and reset the newSubmission state
-      onSuccess: (data, variables, context) => {
-        setOpen(false);
-      },
       // On failure, roll back to the previous value
       onError: (err, variables, previousValue) => {
+        setOpen(true);
         alert("Error saving submission: " + err.message + "\nPlease try again.");
         queryClient.setQueryData('submissions', previousValue);
       },
