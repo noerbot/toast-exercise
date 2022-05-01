@@ -8,10 +8,7 @@ export default function Content() {
   return (
     <Box sx={{marginTop: 3}}>
       <Typography variant="h4">Liked Form Submissions</Typography>
-
-      <Typography variant="body1" sx={{fontStyle: 'italic', marginTop: 1}}>
-        <LikedSubmissionList />
-      </Typography>
+      <LikedSubmissionList />
       <Toast />
     </Box>
   );
