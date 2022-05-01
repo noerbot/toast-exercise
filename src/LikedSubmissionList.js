@@ -11,24 +11,36 @@ import FolderIcon from '@mui/icons-material/Folder';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {fetchLikedFormSubmissions} from './service/mockServer';
 import Typography from '@mui/material/Typography';
+import Toast from './Toast';
+
+const maxFetchAttempts = 3;
 
 export default function LikedSubmissionList() {
 
     const [likedFormSubmissions, setLikedFormSubmissions] = useState(false);
-
+    const [fetchAttempts, setFetchAttempts] = useState(1);
+    const [fetchFailed, setFetchFailed] = useState(false);
     useEffect(() => {
         fetchLikedFormSubmissions().then(response => {
             console.log('response: ', response);
             setLikedFormSubmissions(response.formSubmissions);
         }).catch(error => {
             console.log('error: ', error);
-            // TODO: better error handling - show error to user and retry or tell them to refresh
+            fetchAttempts < maxFetchAttempts ? setFetchAttempts(fetchAttempts + 1) : setFetchFailed(true);
         });
-        // TODO: handle empty state (before any submissions have been saved)
-    }, []);
+    }, [fetchAttempts]);
 
-    if(!likedFormSubmissions) {
-        return <Typography variant="p">Loading...</Typography>;
+    if(!likedFormSubmissions && !fetchFailed) {
+        return <Typography ml={1}>Loading... attempt #{fetchAttempts} of {maxFetchAttempts}</Typography>;
+    } else if (fetchFailed) {
+        return <Typography ml={1}>Oops, our flaky server failed to load submissions after {maxFetchAttempts} attempts. Please try again later!</Typography>;
+    } else if (likedFormSubmissions.length === 0) {
+        return (
+            <>
+                <Typography ml={1}>Submissions you like will appear here.</Typography>
+                <Toast />
+            </>
+        );
     }
 
     return (
@@ -61,6 +73,7 @@ export default function LikedSubmissionList() {
                     </List>
                 </Grid>
             </Grid>
+            <Toast />
         </Box>
     );
 }
