@@ -32,7 +32,6 @@ export default function Toast(props) {
     <div>
       <Snackbar
         open={open}
-        onClose={handleClose}
         message={newSubmission.data?.firstName + ' ' + newSubmission.data?.lastName + '\n' + newSubmission.data?.email}
         style={{ whiteSpace: 'pre-wrap' }} 
         action={action}

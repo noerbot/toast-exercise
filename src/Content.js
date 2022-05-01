@@ -19,7 +19,6 @@ export default function Content() {
     onMessage((formSubmission) => {
         setNewSubmission(formSubmission);
         setOpen(true);
-        // TODO: better handling when "Add Submission" is clicked in rapid succession
     });
   }, []);
 
