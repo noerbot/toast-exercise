@@ -4,36 +4,13 @@ import Snackbar from '@mui/material/Snackbar';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import Slide from '@mui/material/Slide';
-import { onMessage, saveLikedFormSubmission } from './service/mockServer';
 
 function SlideTransition(props) {
     return <Slide {...props} direction="up" />;
 }
 
 export default function Toast(props) {
-  const {addSubmissiontoList} = props;
-  const [open, setOpen] = React.useState(false);
-
-  const [newSubmission, setNewSubmission] = useState({});
-  useEffect(() => {
-    onMessage((formSubmission) => {
-        console.log('message received: ', formSubmission);
-        setNewSubmission(formSubmission);
-        setOpen(true);
-        // TODO: better handling when "Add Submission" is clicked in rapid succession
-    });
-  }, []);
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleLike = () => {
-    saveLikedFormSubmission(newSubmission);
-    addSubmissiontoList(newSubmission);
-    // TODO: add retry logic for when saving a form submission fails
-    setOpen(false);
-  }
+  const {handleLike, handleClose, open, newSubmission} = props;
 
   const action = (
     <React.Fragment>

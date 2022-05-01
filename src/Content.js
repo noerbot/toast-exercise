@@ -4,41 +4,74 @@ import Typography from '@mui/material/Typography';
 import LikedSubmissionList from './LikedSubmissionList';
 import {fetchLikedFormSubmissions} from './service/mockServer';
 import Toast from './Toast';
-
-const maxFetchAttempts = 3;
+import { useQuery, useQueryClient, useMutation } from 'react-query';
+import { onMessage, saveLikedFormSubmission } from './service/mockServer';
 
 export default function Content() {
 
-  const [likedFormSubmissions, setLikedFormSubmissions] = useState([]);
+  const queryClient = useQueryClient();
 
-  const [fetchAttempts, setFetchAttempts] = useState(1);
-  const [fetchFailed, setFetchFailed] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const { isLoading, isError, data } = useQuery('submissions', fetchLikedFormSubmissions);
+
+  const [open, setOpen] = React.useState(false);
+  const [newSubmission, setNewSubmission] = useState({});
   useEffect(() => {
-      fetchLikedFormSubmissions().then(response => {
-          console.log('response: ', response);
-          setLikedFormSubmissions(response.formSubmissions);
-          setIsLoading(false);
-      }).catch(error => {
-          console.error('error: ', error);
-          if (fetchAttempts < maxFetchAttempts) {
-            setFetchAttempts(fetchAttempts + 1);
-          } else {
-            setFetchFailed(true);
-            setIsLoading(false);
-          }
-      });
-  }, [fetchAttempts]);
+    onMessage((formSubmission) => {
+        console.log('message received: ', formSubmission);
+        setNewSubmission(formSubmission);
+        setOpen(true);
+        // TODO: better handling when "Add Submission" is clicked in rapid succession
+    });
+  }, []);
 
-  const addSubmissiontoList = (submission) => {
-      setLikedFormSubmissions([...likedFormSubmissions, submission]);
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleLike = () => {
+    addSubmissionMutation.mutate(newSubmission);
+    // TODO: add retry logic for when saving a form submission fails
   }
+
+  const addSubmissionMutation = useMutation(
+    newSubmission => saveLikedFormSubmission(newSubmission),
+    {
+      // Optimistically update the cache value on mutate, but store
+      // the old value and return it so that it's accessible in case of
+      // an error
+      onMutate: async newSubmission => {
+        await queryClient.cancelQueries('submissions');
+
+        const previousValue = queryClient.getQueryData('submissions');
+
+        queryClient.setQueryData('submissions', old => ({
+          ...old,
+          formSubmissions: [...old.formSubmissions, newSubmission],
+        }));
+
+        return previousValue;
+      },
+      // On success, close the toast and reset the newSubmission state
+      onSuccess: (data, variables, context) => {
+        setOpen(false);
+      },
+      // On failure, roll back to the previous value
+      onError: (err, variables, previousValue) => {
+        alert("Error saving submission: " + err.message + "\nPlease try again.");
+        queryClient.setQueryData('submissions', previousValue);
+      },
+      // After success or failure, refetch the query
+      onSettled: () => {
+        queryClient.invalidateQueries('submissions');
+      },
+    }
+  );
 
   return (
     <Box sx={{marginTop: 3}}>
       <Typography variant="h4">Liked Form Submissions</Typography>
-      <LikedSubmissionList likedFormSubmissions={likedFormSubmissions} isLoading={isLoading} fetchFailed={fetchFailed} />
-      <Toast addSubmissiontoList={addSubmissiontoList} />
+      <LikedSubmissionList likedFormSubmissions={data?.formSubmissions} isLoading={isLoading} fetchFailed={isError} />
+      <Toast handleLike={handleLike} handleClose={handleClose} open={open} newSubmission={newSubmission} />
     </Box>
   );
 }
