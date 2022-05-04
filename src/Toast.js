@@ -14,7 +14,7 @@ export default function Toast(props) {
 
   const action = (
     <React.Fragment>
-      <Button color="primary" size="large" onClick={handleLike}>
+      <Button color="secondary" size="large" onClick={handleLike}>
         LIKE
       </Button>
       <IconButton

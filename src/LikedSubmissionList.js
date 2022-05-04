@@ -31,7 +31,7 @@ export default function LikedSubmissionList(props) {
                     {likedFormSubmissions.length > 0 && likedFormSubmissions.map((formSubmission) => (
                             <ListItem
                                 secondaryAction={
-                                    <IconButton edge="end" aria-label="delete" onClick={() => removeSubmission(formSubmission.id)}>
+                                    <IconButton edge="end" aria-label="delete" onClick={() => removeSubmission(formSubmission.id)} color="secondary">
                                         <DeleteIcon />
                                     </IconButton>
                                 }
